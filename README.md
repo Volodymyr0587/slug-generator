@@ -26,9 +26,9 @@ A real-time slug generator with live preview, built with Laravel 13 and Livewire
 
 1. 🧬 Clone the repository
 
-    `git clone https://github.com/Volodymyr0587/laravel-slug-app`
+    `git clone https://github.com/Volodymyr0587/slug-generator`
 
-    `cd laravel-slug-app`
+    `cd slug-generator`
 
 2. 📦 Install dependencies
 
