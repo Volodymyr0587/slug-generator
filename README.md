@@ -1,58 +1,115 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Slug Generator — Laravel 13 + Livewire 4
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A real-time slug generator with live preview, built with Laravel 13 and Livewire 4.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- ⚡ **Live preview** — slug updates as you type (no page reload)
+- **Separator choice** — dash (`-`) or underscore (`_`)
+- **Remove stop words** — strips articles, prepositions, conjunctions, pronouns, weak verbs, filler words
+- **Remove numbers** — strips all digit sequences
+- **Auto lowercase** — always applied
+- **Special character removal** — strips `%`, `&`, `?`, `!`, `'`
+- **Copy to clipboard** button
+- Stats bar: character count, word count, lowercase confirmation
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ⚙️ Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Prerequisites
 
-## Learning Laravel
+- PHP >= 8.2
+- Composer
+- Laravel
+- Node.js & npm
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Steps
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. 🧬 Clone the repository
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+    `git clone https://github.com/Volodymyr0587/laravel-slug-app`
 
-## Agentic Development
+    `cd laravel-slug-app`
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+2. 📦 Install dependencies
 
-```bash
-composer require laravel/boost --dev
+    `composer install`
 
-php artisan boost:install
+    `npm install`
+
+3. 📝 Set up the environment
+
+    `cp .env.example .env`
+
+    `php artisan key:generate`
+
+4. 🗄️ Database setup
+
+    Using SQLite for simplicity. Update your .env file accordingly:
+
+    `DB_CONNECTION=sqlite`
+
+5. 🚀 Serve the Application
+
+    You can start the application in two ways:
+    - Option 1 — Run each service manually:
+
+        `npm run dev`
+
+        `php artisan serve`
+
+    - Option 2 — Use a single Composer command:
+
+        `composer run dev`
+
+        This command will automatically start the Vite dev server and prepare the app for local development.
+
+Visit [http://localhost:8000](http://localhost:8000)
+
+---
+
+## Project Structure
+
+```
+app/
+  Livewire/
+    SlugGenerator.php          ← Component logic & slug processing
+
+resources/
+  views/
+    layouts/
+      app.blade.php            ← Main HTML layout
+    livewire/
+      slug-generator.blade.php ← Component template & styles
+
+routes/
+  web.php                      ← Single route → SlugGenerator component
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## How It Works
 
-## Contributing
+The `SlugGenerator` Livewire component reacts to every property change via `wire:model.live`. The `updated()` hook triggers `generateSlug()` which:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Converts input to lowercase (`mb_strtolower`)
+2. Removes special chars: `%`, `&`, `?`, `!`, `'`
+3. Removes non-alphanumeric characters (Unicode-safe via `\p{L}\p{N}`)
+4. Optionally strips stop words (word-boundary matching)
+5. Optionally strips number sequences
+6. Collapses whitespace/separators into chosen separator
+7. Trims leading/trailing separators
 
-## Code of Conduct
+## Stop Words Covered
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Category          | Words                                                                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Articles          | a, an, the                                                                                                                     |
+| Prepositions      | at, for, in, of, on, to, with, by, about, against, between, into, through, during, before, after, above, below, from, up, down |
+| Conjunctions      | and, or, but, so, yet, nor                                                                                                     |
+| Pronouns          | he, she, it, they, we, you, him, her, them, us, i, me, my, his, its, their                                                     |
+| Common/Weak Verbs | is, are, was, were, be, been, being, does, do, did, has, have, had, having, can, could, would, should, may, might              |
+| Filler Words      | not, very, such, rather, using, what, which, why, if, that                                                                     |
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📜 License
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Personal tool. Use, modify, and adapt freely.

@@ -1,11 +1,339 @@
-@import 'tailwindcss';
+/* ─── Reset & Base ─────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+:root {
+    --ink: #0f0e0d;
+    --paper: #f5f0e8;
+    --cream: #ede7d5;
+    --accent: #d4410b;
+    --accent2: #1a6b3c;
+    --muted: #7a7060;
+    --border: #c8bfaa;
+    --mono: "Space Mono", monospace;
+    --display: "Syne", sans-serif;
+}
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+html {
+    font-size: 16px;
+}
+
+body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--mono);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 27px,
+        rgba(0, 0, 0, 0.04) 27px,
+        rgba(0, 0, 0, 0.04) 28px
+    );
+}
+
+/* ─── Header ───────────────────────────────────────────────── */
+.site-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.site-header .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+}
+
+.site-header h1 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+}
+
+.site-header h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+}
+
+/* ─── Card ─────────────────────────────────────────────────── */
+.card {
+    width: 100%;
+    max-width: 640px;
+    background: #fff;
+    border: 2px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+    padding: 2rem;
+}
+
+@media (min-width: 1024px) {
+    .card {
+        max-width: 66vw;
+    }
+}
+
+@media (min-width: 1536px) {
+    .card {
+        max-width: 960px;
+    }
+}
+
+/* ─── Footer ───────────────────────────────────────────────── */
+footer {
+    margin-top: 2rem;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.field-label {
+    font-family: var(--display);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.text-input {
+    width: 100%;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    font-family: var(--mono);
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: box-shadow 0.15s;
+    color: var(--ink);
+}
+.text-input:focus {
+    box-shadow: 4px 4px 0 var(--accent);
+}
+.text-input::placeholder {
+    color: var(--border);
+}
+
+/* ─── Separator Radio Group ──────────────────────────────── */
+.sep-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.sep-label {
+    flex: 1 1 140px;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border: 2px solid var(--border);
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    transition:
+        border-color 0.15s,
+        background 0.15s;
+    user-select: none;
+}
+.sep-label:hover {
+    border-color: var(--ink);
+}
+.sep-label.active {
+    border-color: var(--ink);
+    background: var(--paper);
+    box-shadow: 3px 3px 0 var(--ink);
+}
+
+.sep-label input[type="radio"] {
+    display: none;
+}
+
+.sep-badge {
+    font-family: var(--mono);
+    font-size: 1.3rem;
+    font-weight: 700;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+    color: var(--paper);
+    flex-shrink: 0;
+}
+
+.sep-text {
+    font-family: var(--display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* ─── Checkbox Group ─────────────────────────────────────── */
+.check-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-top: 1.25rem;
+}
+
+.check-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.check-box {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--ink);
+    background: white;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.1s;
+}
+.check-label input[type="checkbox"] {
+    display: none;
+}
+.check-label input[type="checkbox"]:checked + .check-box {
+    background: var(--ink);
+}
+.check-label input[type="checkbox"]:checked + .check-box::after {
+    content: "";
+    width: 0.45rem;
+    height: 0.7rem;
+    border-right: 2.5px solid var(--paper);
+    border-bottom: 2.5px solid var(--paper);
+    transform: rotate(45deg) translateY(-1px);
+    display: block;
+}
+
+.check-text {
+    font-family: var(--display);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* ─── Divider ─────────────────────────────────────────────── */
+.divider {
+    border: none;
+    border-top: 2px dashed var(--border);
+    margin: 1.75rem 0;
+}
+
+/* ─── Output ─────────────────────────────────────────────── */
+.output-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.output-box {
+    width: 100%;
+    border: 2px solid var(--ink);
+    background: var(--cream);
+    font-family: var(--mono);
+    font-size: 1rem;
+    padding: 0.85rem 1rem;
+    color: var(--ink);
+    word-break: break-all;
+    min-height: 3.2rem;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.output-empty {
+    color: var(--border);
+    font-style: italic;
+}
+
+.slug-text {
+    color: var(--accent2);
+    font-weight: 700;
+}
+
+/* ─── Copy Button ────────────────────────────────────────── */
+.copy-btn {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 2px solid var(--ink);
+    background: white;
+    padding: 0.3rem 0.75rem;
+    cursor: pointer;
+    transition:
+        background 0.1s,
+        box-shadow 0.1s,
+        transform 0.1s;
+}
+.copy-btn:hover:not(:disabled) {
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: 2px 2px 0 var(--accent);
+}
+.copy-btn:active {
+    transform: translate(1px, 1px);
+}
+.copy-btn:disabled {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    cursor: default;
+    background: #eef7f1;
+}
+
+/* ─── Stats Bar ──────────────────────────────────────────── */
+.stats-bar {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.75rem;
+    font-size: 0.7rem;
+    color: var(--muted);
+}
+.stat-item {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+}
+.stat-item strong {
+    color: var(--ink);
+}
+
+/* ─── Loading indicator ──────────────────────────────────── */
+.loading-bar {
+    height: 2px;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.3s;
+    margin-top: -2px;
+    position: relative;
+    z-index: 10;
+}
+[wire\:loading] ~ .loading-bar,
+[wire\:loading] .loading-bar {
+    width: 100%;
 }
