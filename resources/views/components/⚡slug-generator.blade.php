@@ -22,14 +22,14 @@ new class extends Component
         'and', 'or', 'but', 'so', 'yet', 'nor',
         // Pronouns
         'he', 'she', 'it', 'they', 'we', 'you', 'him', 'her', 'them', 'us',
-        'i', 'me', 'my', 'his', 'its', 'their',
+        'i', 'me', 'my', 'his', 'its', 'their', 'this',
         // Common/Weak Verbs
         'is', 'are', 'was', 'were', 'be', 'been', 'being', 'does', 'do', 'did',
         'has', 'have', 'had', 'having', 'can', 'could', 'would', 'should',
         'may', 'might',
         // Other/Filler Words
         'not', 'very', 'such', 'rather', 'using', 'what', 'which', 'why',
-        'if', 'that',
+        'if', 'that', 'here', 'there',
     ];
 
     public function updated(): void
