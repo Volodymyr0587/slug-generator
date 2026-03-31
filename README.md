@@ -70,24 +70,25 @@ Visit [http://localhost:8000](http://localhost:8000)
 ## Project Structure
 
 ```
-app/
-  Livewire/
-    SlugGenerator.php          ← Component logic & slug processing
-
 resources/
   views/
+    components/
+      slug-generator.blade.php ← Single-file component (view and logic)
     layouts/
       app.blade.php            ← Main HTML layout
-    livewire/
-      slug-generator.blade.php ← Component template & styles
 
 routes/
-  web.php                      ← Single route → SlugGenerator component
+  web.php                      ← Single route → slug-generator component
+
+tests/
+  Feature/
+    Livewire/
+      SlugGeneratorTest.php    ← All tests for SlugGenerator
 ```
 
 ## How It Works
 
-The `SlugGenerator` Livewire component reacts to every property change via `wire:model.live`. The `updated()` hook triggers `generateSlug()` which:
+The `slug-generator` Livewire component reacts to every property change via `wire:model.live`. The `updated()` hook triggers `generateSlug()` which:
 
 1. Converts input to lowercase (`mb_strtolower`)
 2. Removes special chars: `%`, `&`, `?`, `!`, `'`
@@ -104,7 +105,7 @@ The `SlugGenerator` Livewire component reacts to every property change via `wire
 | Articles          | a, an, the                                                                                                                     |
 | Prepositions      | at, for, in, of, on, to, with, by, about, against, between, into, through, during, before, after, above, below, from, up, down |
 | Conjunctions      | and, or, but, so, yet, nor                                                                                                     |
-| Pronouns          | he, she, it, they, we, you, him, her, them, us, i, me, my, his, its, their                                                     |
+| Pronouns          | he, she, it, they, we, you, him, her, them, us, i, me, my, his, its, their, this                                               |
 | Common/Weak Verbs | is, are, was, were, be, been, being, does, do, did, has, have, had, having, can, could, would, should, may, might              |
 | Filler Words      | not, very, such, rather, using, what, which, why, if, that                                                                     |
 
