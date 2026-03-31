@@ -173,8 +173,8 @@ it('returns empty slug when all words are stop words', function () {
 it('does not produce leading or trailing separators', function (string $input) {
     Livewire::test('slug-generator')
         ->set('input', $input)
-        ->assertSet('slug', fn ($slug) => ! str_starts_with($slug, '-')
-                                       && ! str_ends_with($slug, '-'));
+        ->assertSet('slug', fn ($slug) => ! str_starts_with((string) $slug, '-')
+                                       && ! str_ends_with((string) $slug, '-'));
 })->with([
     ['  hello world  '],
     ['---hello---'],
@@ -186,5 +186,5 @@ it('handles very long input without errors', function () {
 
     Livewire::test('slug-generator')
         ->set('input', $input)
-        ->assertSet('slug', fn ($slug) => strlen($slug) > 0);
+        ->assertSet('slug', fn ($slug) => (string) $slug !== '');
 });

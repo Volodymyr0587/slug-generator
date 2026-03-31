@@ -48,26 +48,26 @@ new class extends Component
         $text = preg_replace("/[%&?!']/u", '', $text);
 
         // 3. Remove other non-alphanumeric characters except spaces and hyphens/underscores
-        $text = preg_replace('/[^\p{L}\p{N}\s\-_]/u', ' ', $text);
+        $text = preg_replace('/[^\p{L}\p{N}\s\-_]/u', ' ', (string) $text);
 
         // 4. Remove stop words if enabled
         if ($this->removeStopWords) {
-            $words = preg_split('/\s+/', $text, -1, PREG_SPLIT_NO_EMPTY);
-            $words = array_filter($words, fn($word) => !in_array(mb_strtolower($word), $this->stopWords));
+            $words = preg_split('/\s+/', (string) $text, -1, PREG_SPLIT_NO_EMPTY);
+            $words = array_filter($words, fn($word) => !in_array(mb_strtolower((string) $word), $this->stopWords));
             $text = implode(' ', $words);
         }
 
         // 5. Remove numbers if enabled
         if ($this->removeNumbers) {
-            $text = preg_replace('/\d+/', ' ', $text);
+            $text = preg_replace('/\d+/', ' ', (string) $text);
         }
 
         // 6. Replace spaces and existing separators with chosen separator
         $sep = $this->separator;
-        $text = preg_replace('/[\s\-_]+/', $sep, trim($text));
+        $text = preg_replace('/[\s\-_]+/', $sep, trim((string) $text));
 
         // 7. Remove leading/trailing separators
-        $this->slug = trim($text, $sep);
+        $this->slug = trim((string) $text, $sep);
     }
 };
 ?>
