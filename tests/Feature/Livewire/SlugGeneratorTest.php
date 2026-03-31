@@ -2,6 +2,7 @@
 
 use Livewire\Livewire;
 
+// --- 1. Initial state ---
 it('renders the slug generator page and sets the correct initial state', function () {
     Livewire::test('slug-generator')
         ->assertStatus(200)
@@ -23,7 +24,7 @@ it('generates a correct slug from simple input', function (string $input, string
     'three words' => ['foo bar baz', 'foo-bar-baz'],
 ]);
 
-// --- 2. Lowercase ---
+// --- 3. Lowercase conversion ---
 it('always converts input to lowercase', function (string $input, string $expected) {
     Livewire::test('slug-generator')
         ->set('input', $input)
@@ -34,7 +35,7 @@ it('always converts input to lowercase', function (string $input, string $expect
     'camelCase' => ['helloWorld', 'helloworld'],
 ]);
 
-// --- 3. Special characters ---
+// --- 4. Special characters ---
 it('removes special character', function (string $input, string $expected) {
     Livewire::test('slug-generator')
         ->set('input', $input)
@@ -48,7 +49,7 @@ it('removes special character', function (string $input, string $expected) {
     'multiple mixed' => ["it's 50% off!", 'its-50-off'],
 ]);
 
-// --- 4. Separators ---
+// --- 5. Separators ---
 it('uses dash as default separator', function () {
     Livewire::test('slug-generator')
         ->set('input', 'hello world')
@@ -71,7 +72,7 @@ it('recalculates slug when separator changes', function () {
         ->assertSet('slug', 'hello_world');
 });
 
-// --- 5. Stop words ---
+// --- 6. Stop words ---
 it('does not remove stop words by default', function () {
     Livewire::test('slug-generator')
         ->set('input', 'the quick brown fox')
@@ -113,4 +114,77 @@ it('re-generates slug when stop words option is toggled', function () {
         ->assertSet('slug', 'quick-fox')
         ->set('removeStopWords', false)
         ->assertSet('slug', 'the-quick-fox');
+});
+
+// --- 7. Remove Numbers ---
+it('does not remove numbers by default', function () {
+    Livewire::test('slug-generator')
+        ->set('input', 'top 10 movies of 2024')
+        ->assertSet('slug', 'top-10-movies-of-2024');
+});
+
+it('removes numbers when option is enabled', function (string $input, string $expected) {
+    Livewire::test('slug-generator')
+        ->set('removeNumbers', true)
+        ->set('input', $input)
+        ->assertSet('slug', $expected);
+})->with([
+    'number between words' => ['top 10 movies',      'top-movies'],
+    'number at start' => ['3 blind mice',        'blind-mice'],
+    'number at end' => ['world war 2',         'world-war'],
+    'multiple numbers' => ['1 fox 2 cats 3 dogs', 'fox-cats-dogs'],
+    'number only' => ['12345',               ''],
+]);
+
+it('removes numbers and stop words together', function () {
+    Livewire::test('slug-generator')
+        ->set('removeNumbers', true)
+        ->set('removeStopWords', true)
+        ->set('input', 'the 3 best movies of 2024')
+        ->assertSet('slug', 'best-movies');
+});
+
+// --- 8. Edge Cases ---
+it('returns empty slug for empty input', function () {
+    Livewire::test('slug-generator')
+        ->set('input', '')
+        ->assertSet('slug', '');
+});
+
+it('returns empty slug for whitespace only input', function () {
+    Livewire::test('slug-generator')
+        ->set('input', '     ')
+        ->assertSet('slug', '');
+});
+
+it('returns empty slug for special characters only', function () {
+    Livewire::test('slug-generator')
+        ->set('input', '!!! ??? %%% &&&')
+        ->assertSet('slug', '');
+});
+
+it('returns empty slug when all words are stop words', function () {
+    Livewire::test('slug-generator')
+        ->set('removeStopWords', true)
+        ->set('input', 'the and or but')
+        ->assertSet('slug', '');
+});
+
+it('does not produce leading or trailing separators', function (string $input) {
+    Livewire::test('slug-generator')
+        ->set('input', $input)
+        ->assertSet('slug', fn ($slug) => ! str_starts_with($slug, '-')
+                                       && ! str_ends_with($slug, '-'));
+})->with([
+    ['  hello world  '],
+    ['---hello---'],
+    ['  !!! hello !!!  '],
+]);
+
+it('handles very long input without errors', function () {
+    $input = str_repeat('hello world ', 500);
+
+    Livewire::test('slug-generator')
+        ->set('input', $input)
+        ->assertSet('slug', fn ($slug) => strlen($slug) > 0);
 });
